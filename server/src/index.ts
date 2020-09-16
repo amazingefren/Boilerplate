@@ -8,6 +8,11 @@ import { __prod__ } from "./constants";
 import microConfig from "./mikro-orm.config";
 import express from "express";
 // import { CLIConfigurator } from "@mikro-orm/cli";
+import redis from "redis";
+import session from "express-session";
+import connectRedis from "connect-redis";
+import { MyContext } from "./types";
+
 const PORT = process.env.PORT || 4000;
 
 const main = async () => {
@@ -15,12 +20,30 @@ const main = async () => {
   await orm.getMigrator().up();
   const app = express();
 
+  let RedisStore = connectRedis(session);
+  let redisClient = redis.createClient();
+
+  app.use(
+    session({
+      name: "qid",
+      store: new RedisStore({ client: redisClient, disableTouch: true }),
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 365, //10 years
+        httpOnly: true,
+        secure: __prod__, // true on prod -- cookie on HTTPS
+      },
+      saveUninitialized: false,
+      secret: "dev",
+      resave: false,
+    })
+  );
+
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
       resolvers: [PostResolver, UserResolver],
       validate: false,
     }),
-    context: () => ({ em: orm.em }),
+    context: ({ req, res }): MyContext => ({ em: orm.em, req, res }),
   });
 
   apolloServer.applyMiddleware({ app });
