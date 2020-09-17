@@ -6,6 +6,7 @@ import { useRegisterMutation } from "../../generated/graphql";
 type UserRegister = {
   username: string;
   password: string;
+  success: boolean;
 };
 
 const ReigsterForm = () => {
@@ -32,7 +33,8 @@ const ReigsterForm = () => {
       }
     } else {
       console.log(res.data?.register.user?.id);
-      reset();
+      setError("success", { message: "Success" });
+      setTimeout(() => reset(), 1000);
     }
   };
 
@@ -71,7 +73,14 @@ const ReigsterForm = () => {
             </div>
           )}
         </div>
-        <input type="submit" value="Submit" id={styles.registerFormSubmit} />
+        <input
+          name="submit"
+          type="submit"
+          value="Submit"
+          id={styles.registerFormSubmit}
+          ref={register({})}
+        />
+        {errors.success && <div>{errors.success.message}</div>}
       </form>
     </div>
   );
