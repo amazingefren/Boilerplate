@@ -10,13 +10,26 @@ type UserRegister = {
 
 const ReigsterForm = () => {
   const [, apiRegister] = useRegisterMutation();
-  const { register, handleSubmit, reset, errors } = useForm<UserRegister>();
+  const { register, handleSubmit, reset, errors, setError } = useForm<
+    UserRegister
+  >();
 
   const onSubmit = async (data: UserRegister) => {
     // console.log("data", data);
     const res = await apiRegister(data);
     if (res.data?.register.errors) {
       console.log(res.data.register.errors[0]);
+      const {
+        field: errorType,
+        message: errorMessage,
+      } = res.data.register.errors[0];
+      console.log(errorMessage);
+      if (errorType == "username" || errorType == "password")
+        setError(errorType, { message: errorMessage });
+      else {
+        setError("username", { message: "something went wrong" });
+        console.log(errorType, errorMessage);
+      }
     } else {
       console.log(res.data?.register.user?.id);
       reset();
@@ -30,12 +43,15 @@ const ReigsterForm = () => {
           <label>Username:</label>
           <input
             type="text"
+            placeholder="Username"
             name="username"
-            ref={register({ required: true })}
+            ref={register({
+              required: { value: true, message: "Username is Required" },
+            })}
           />
-          {errors.username && errors.username.type == "required" && (
+          {errors.username && (
             <div className={styles.registerFormError}>
-              You Must Enter a Username
+              {errors.username.message}
             </div>
           )}
         </div>
@@ -43,12 +59,15 @@ const ReigsterForm = () => {
           <label>Password:</label>
           <input
             type="password"
+            placeholder="Password"
             name="password"
-            ref={register({ required: true })}
+            ref={register({
+              required: { value: true, message: "Password is Required" },
+            })}
           />
-          {errors.password && errors.password.type == "required" && (
+          {errors.password && (
             <div className={styles.registerFormError}>
-              You Must Enter a Password
+              {errors.password.message}
             </div>
           )}
         </div>
