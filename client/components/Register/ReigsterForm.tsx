@@ -1,35 +1,26 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import styles from "./ReigsterForm.module.scss";
-import { useMutation } from "urql";
+import { useRegisterMutation } from "../../generated/graphql";
 
 type UserRegister = {
   username: string;
   password: string;
 };
 
-const REGISTER_MUTATION = `
-  mutation Register($username: String!, $password: String!) {
-    register(options: { username: $username, password: $password }) {
-      errors {
-        field
-        message
-      }
-      user{
-        id
-        username
-      }
-    }
-  }
-`;
-
 const ReigsterForm = () => {
-  const [, apiRegister] = useMutation(REGISTER_MUTATION);
+  const [, apiRegister] = useRegisterMutation();
   const { register, handleSubmit, reset, errors } = useForm<UserRegister>();
+
   const onSubmit = async (data: UserRegister) => {
-    console.log("data", data);
-    await apiRegister(data);
-    reset();
+    // console.log("data", data);
+    const res = await apiRegister(data);
+    if (res.data?.register.errors) {
+      console.log(res.data.register.errors[0]);
+    } else {
+      console.log(res.data?.register.user?.id);
+      reset();
+    }
   };
 
   return (
