@@ -59,6 +59,7 @@ export class UserResolver {
   // User Registration
   @Mutation(() => UserResponse)
   async register(
+    //@Arg("username", () => String, { nullable: true }) username: string,
     @Arg("options") options: UsernamePasswordInput,
     @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
@@ -87,26 +88,35 @@ export class UserResolver {
       password: hashedPassword,
     });
 
+    // Search for existing User, this method is being used to prevent MikroORM lifecycle hook issues with em.persist()
+    const exists = await em.findOne(User, {
+      username: user.username.toLowerCase(),
+    });
+
     // Create User and Store in DB
-    try {
-      await em.persistAndFlush(user); // MikroORM lifecycle hook limitation will trigger em.persist () from being called on hooks. TODO: Find Alternate Solution, this will do for now
-    } catch (err) {
-      // 23505 Username not Unique (Username already in use)
-      if (err.code == "23505") {
-        return {
-          errors: [
-            {
-              field: "username",
-              message: "username already exists",
-            },
-          ],
-        };
+    if (!exists) {
+      try {
+        await em.persistAndFlush(user); // FIXED*** OLD=MikroORM lifecycle hook limitation will trigger em.persist () from being called on hooks.
+      } catch (err) {
+        console.log(err);
       }
+    } else {
+      return {
+        errors: [
+          {
+            field: "username",
+            message: "username already exists",
+          },
+        ],
+      };
     }
 
     // Sets user cookie on browser after registration succeeds
-    req.session!.userId = user.id;
-    return { user };
+    if (user) {
+      req.session!.userId = user.id;
+      return { user };
+    }
+    return user;
   }
 
   // User Login

@@ -5,6 +5,7 @@ import express from "express";
 import session from "express-session";
 import redis from "redis";
 import connectRedis from "connect-redis";
+import cors from "cors";
 // Graph QL
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
@@ -15,7 +16,7 @@ import microConfig from "./mikro-orm.config";
 import { PostResolver } from "./resolvers/post-resolver";
 import { UserResolver } from "./resolvers/user-resolver";
 // Type Definitions
-import { MyContext } from "./types";
+//import { MyContext } from "./types";
 
 const PORT = process.env.PORT || 4000; // Assign Port
 
@@ -30,6 +31,14 @@ const main = async () => {
   // Redis Session
   let RedisStore = connectRedis(session);
   let redisClient = redis.createClient();
+
+  // cors
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    })
+  );
 
   // Redis Configuration
   app.use(
@@ -53,9 +62,12 @@ const main = async () => {
       resolvers: [PostResolver, UserResolver],
       validate: false,
     }),
-    context: ({ req, res }): MyContext => ({ em: orm.em, req, res }),
+    context: ({ req, res }) => ({ em: orm.em, req, res }),
   });
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({
+    app,
+    cors: false,
+  });
 
   // Routing
   app.get("/", (_req, res) => {
