@@ -1,30 +1,23 @@
 //import Link from "next/link";
 import React from "react";
-import styles from "./modules/index.module.scss";
+// import styles from "./modules/index.module.scss";
 import Link from "next/link";
-import { useUserQuery } from "../generated/graphql";
+import Navbar from "../components/Navbar/Navbar";
 
 const IndexPage = () => {
-  const [{ data, fetching }] = useUserQuery();
-  if (data) {
-    console.log(data);
-  }
   return (
-    <div id={styles.indexWrapper}>
+    <div>
+      <Navbar />
       <h1>Hello World</h1>
       <h2>Boilerplate</h2>
-      {!data ? (
-        <div>
-          <Link href="/register">
-            <a>Register</a>
-          </Link>
-          <Link href="/login">
-            <a>Login</a>
-          </Link>
-        </div>
-      ) : (
-        <div>Hello {data?.me?.username} </div>
-      )}
+      <div>
+        <Link href="/register">
+          <a>Register</a>
+        </Link>
+        <Link href="/login">
+          <a>Login</a>
+        </Link>
+      </div>
     </div>
   );
 };

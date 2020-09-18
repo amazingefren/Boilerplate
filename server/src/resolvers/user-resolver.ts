@@ -91,7 +91,7 @@ export class UserResolver {
     // Search for existing User, this method is being used to prevent MikroORM lifecycle hook issues with em.persist()
     const exists = await em.findOne(User, {
       username: user.username.toLowerCase(),
-    });
+    }); // While this method is slower than catching a Not Unique error, it is much more reliable.
 
     // Create User and Store in DB
     if (!exists) {
