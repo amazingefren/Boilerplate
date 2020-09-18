@@ -1,31 +1,31 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import styles from "./ReigsterForm.module.scss";
-import { useRegisterMutation } from "../../generated/graphql";
+import styles from "./LoginForm.module.scss";
+import { useLoginMutation } from "../../generated/graphql";
 import { useRouter } from "next/router";
 
-type UserRegister = {
+type UserLogin = {
   username: string;
   password: string;
   success: boolean;
 };
 
-const ReigsterForm = () => {
-  const [, apiRegister] = useRegisterMutation();
+const LoginForm = () => {
+  const [, apiLogin] = useLoginMutation(); // TO BE CREATED
   const { register, handleSubmit, reset, errors, setError } = useForm<
-    UserRegister
+    UserLogin
   >();
   const router = useRouter();
 
-  const onSubmit = async (data: UserRegister) => {
+  const onSubmit = async (data: UserLogin) => {
     // console.log("data", data);
-    const res = await apiRegister(data);
-    if (res.data?.register.errors) {
-      console.log(res.data.register.errors[0]);
+    const res = await apiLogin(data);
+    if (res.data?.login.errors) {
+      console.log(res.data.login.errors[0]);
       const {
         field: errorType,
         message: errorMessage,
-      } = res.data.register.errors[0];
+      } = res.data.login.errors[0];
       console.log(errorMessage);
       if (errorType == "username" || errorType == "password")
         setError(errorType, { message: errorMessage });
@@ -34,7 +34,7 @@ const ReigsterForm = () => {
         console.log(errorType, errorMessage);
       }
     } else {
-      console.log(res.data?.register.user?.id);
+      console.log(res.data?.login.user?.id);
       setError("success", { message: "Success" });
       setTimeout(() => reset(), 500);
       setTimeout(() => router.push("/"), 500);
@@ -42,9 +42,9 @@ const ReigsterForm = () => {
   };
 
   return (
-    <div id={styles.registerFormContainer}>
+    <div id={styles.loginFormContainer}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className={styles.registerFormField}>
+        <div className={styles.loginFormField}>
           <label>Username:</label>
           <input
             type="text"
@@ -55,12 +55,12 @@ const ReigsterForm = () => {
             })}
           />
           {errors.username && (
-            <div className={styles.registerFormError}>
+            <div className={styles.loginFormError}>
               {errors.username.message}
             </div>
           )}
         </div>
-        <div className={styles.registerFormField}>
+        <div className={styles.loginFormField}>
           <label>Password:</label>
           <input
             type="password"
@@ -71,7 +71,7 @@ const ReigsterForm = () => {
             })}
           />
           {errors.password && (
-            <div className={styles.registerFormError}>
+            <div className={styles.loginFormError}>
               {errors.password.message}
             </div>
           )}
@@ -80,7 +80,7 @@ const ReigsterForm = () => {
           name="submit"
           type="submit"
           value="Submit"
-          id={styles.registerFormSubmit}
+          id={styles.loginFormSubmit}
           ref={register({})}
         />
         {errors.success && <div>{errors.success.message}</div>}
@@ -89,4 +89,4 @@ const ReigsterForm = () => {
   );
 };
 
-export default ReigsterForm;
+export default LoginForm;
