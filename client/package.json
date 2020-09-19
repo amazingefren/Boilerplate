@@ -9,10 +9,13 @@
     "gen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@urql/devtools": "^2.0.2",
     "@urql/exchange-graphcache": "^3.1.1",
     "graphql": "^15.3.0",
+    "isomorphic-unfetch": "^3.0.0",
     "next": "latest",
     "next-sass": "^1.0.3",
+    "next-urql": "^1.1.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hook-form": "^6.8.2",

@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { useUserQuery } from "../../generated/graphql";
+import { useMeQuery } from "../../generated/graphql";
 import styles from "./Navbar.module.scss";
 // import { useUserQuery } from "../../generated/graphql";
 import Link from "next/link";
 
 const Navbar = () => {
-  const [{ data, fetching }] = useUserQuery();
+  const [{ data, fetching }] = useMeQuery();
   let userBody = null;
   if (fetching) {
     userBody = null;
