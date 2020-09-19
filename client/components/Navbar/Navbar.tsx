@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { useMeQuery } from "../../generated/graphql";
 import styles from "./Navbar.module.scss";
 // import { useUserQuery } from "../../generated/graphql";
