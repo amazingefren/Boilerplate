@@ -4,7 +4,12 @@ import NextApp, { AppProps } from "next/app";
 import { dedupExchange, fetchExchange } from "urql";
 import { devtoolsExchange } from "@urql/devtools";
 import { cacheExchange, QueryInput, Cache } from "@urql/exchange-graphcache";
-import { LoginMutation, MeDocument, MeQuery } from "../generated/graphql";
+import {
+  LoginMutation,
+  MeDocument,
+  MeQuery,
+  RegisterMutation,
+} from "../generated/graphql";
 import "./modules/_app.css";
 
 const GRAPHQL_URI = `http://localhost:4000/graphql`;
@@ -52,6 +57,24 @@ export default withUrqlClient((_ssrExchange, _ctx) => ({
                 } else {
                   return {
                     me: result.login.user,
+                  };
+                }
+              }
+            );
+          },
+          register: (_result, _args, cache, _info) => {
+            betterUpdateQuery<RegisterMutation, MeQuery>(
+              cache,
+              {
+                query: MeDocument,
+              },
+              _result,
+              (result, query) => {
+                if (result.register.errors) {
+                  return query;
+                } else {
+                  return {
+                    me: result.register.user,
                   };
                 }
               }
