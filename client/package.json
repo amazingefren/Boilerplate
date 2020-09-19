@@ -18,14 +18,14 @@
     "next-urql": "^1.1.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-hook-form": "^6.8.2",
-    "sass": "^1.26.10",
+    "react-hook-form": "^6.8.3",
+    "sass": "^1.26.11",
     "urql": "^1.10.1"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "1.17.8",
     "@graphql-codegen/introspection": "1.17.8",
-    "@graphql-codegen/typescript": "1.17.8",
+    "@graphql-codegen/typescript": "1.17.9",
     "@graphql-codegen/typescript-operations": "1.17.8",
     "@graphql-codegen/typescript-urql": "^2.0.1",
     "@types/node": "^14.11.1",
