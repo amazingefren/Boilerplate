@@ -1,6 +1,8 @@
 # Boilerplate
 
 Boilerplate is a full-stack reusable template utilizing current technologies.
+- Back on this project on 9/27/2020, new dev environment with dedicated server + ssh.
+- Docker coming soon.
 
 # Technology Stack
 
