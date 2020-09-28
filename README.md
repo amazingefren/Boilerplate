@@ -1,5 +1,5 @@
 # Important!
-Development on this project will be temporarily paused. I am currently learning dedicated my time towards Rust + WASM development.
+Development on this project will be temporarily paused. I am currently dedicating my time towards Rust + WASM development.
 
 # Boilerplate
 
