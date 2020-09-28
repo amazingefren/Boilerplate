@@ -1,3 +1,6 @@
+# Important!
+Development on this project will be temporarily paused. I am currently learning dedicated my time towards Rust + WASM development.
+
 # Boilerplate
 
 Boilerplate is a full-stack reusable template utilizing current technologies.
